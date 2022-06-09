@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Domain\Parspack\Actions\Servers;
 
-use Domain\Parspack\ValueObjects\Servers\DirectoryValueObject;
+use Domain\Parspack\ValueObjects\Servers\DirectoryOrFileValueObject;
 
 class CreateDirectoryServer
 {
-
-    public static function handle(DirectoryValueObject $directoryValueObject): bool
+    public static function handle(DirectoryOrFileValueObject $directoryValueObject): bool
     {
         $username = 'onemohsen';
         $ssh = $directoryValueObject->ssh;
-        $directory = $directoryValueObject->directory;
+        $directoryName = $directoryValueObject->name;
 
         CreateUserServer::handle($ssh, $username);
 
-        $directory = "/opt/myprogram/$username/" . $directory;
+        $directory = "/opt/myprogram/$username/" . $directoryName;
         $directoryCreatedBefor = $ssh->exec('mkdir -m 755 ' . $directory . ' && chown -R ' . $username . ':' . $username . ' ' . $directory);
 
         return $directoryCreatedBefor ? true : false;

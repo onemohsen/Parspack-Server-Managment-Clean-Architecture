@@ -24,7 +24,7 @@ class CeeateDirectoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'directory' => 'required|string',
+            'name' => 'required|string',
         ];
     }
 }
