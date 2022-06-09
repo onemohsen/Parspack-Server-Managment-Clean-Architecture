@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Api\V1\Server;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Command\ListDirectoryCommandResource;
-use Domain\Parspack\Actions\Servers\GetListDirectoryServer;
+use App\Http\Resources\Command\ListFileCommandResource;
+use Domain\Parspack\Actions\Servers\GetListFilesServer;
 use Domain\Parspack\Concerns\Interfaces\Server\SshInterface;
 use Domain\Parspack\Factories\Servers\CommandParserFactory;
 use Illuminate\Http\Response;
 use Infrastructure\Http\Responses\ApiResponse;
 
-class ListDirectoryController extends Controller
+class ListFilesController extends Controller
 {
     public function __invoke(SshInterface $ssh, CommandParserFactory $commandParserFactory)
     {
-        $data = GetListDirectoryServer::handle($ssh, $commandParserFactory);
+        $data = GetListFilesServer::handle($ssh, $commandParserFactory);
 
         return ApiResponse::handle(
-            data: ListDirectoryCommandResource::collection($data),
+            data: ListFileCommandResource::collection($data),
             message: 'success',
             status: Response::HTTP_OK,
         );
