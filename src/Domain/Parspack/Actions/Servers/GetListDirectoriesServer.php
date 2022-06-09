@@ -7,7 +7,7 @@ namespace Domain\Parspack\Actions\Servers;
 use Domain\Parspack\Concerns\Interfaces\Server\SshInterface;
 use Domain\Parspack\Factories\Servers\CommandParserFactory;
 
-class GetListDirectoryServer
+class GetListDirectoriesServer
 {
 
     public static function handle(SshInterface $ssh, CommandParserFactory $commandParserFactory): array
@@ -17,7 +17,7 @@ class GetListDirectoryServer
         $command = "cd $directory && ls -d */";
         $results = $ssh->exec($command);
 
-        $parser = $commandParserFactory->create('listDirectory');
+        $parser = $commandParserFactory->create('listDirectories');
         return $parser->parse($results);
     }
 }

@@ -6,7 +6,7 @@ namespace Domain\Parspack\Services\Commands;
 
 use Domain\Parspack\Concerns\Interfaces\Command\CommandParserInterface;
 
-class ListDirectoryCommandParser implements CommandParserInterface
+class ListDirectoriesCommandParser implements CommandParserInterface
 {
     public function parse(string $lines): array
     {
