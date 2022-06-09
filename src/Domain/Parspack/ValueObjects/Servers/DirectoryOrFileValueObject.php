@@ -6,10 +6,10 @@ namespace Domain\Parspack\ValueObjects\Servers;
 
 use Domain\Parspack\Concerns\Interfaces\Server\SshInterface;
 
-class DirectoryValueObject
+class DirectoryOrFileValueObject
 {
     public function __construct(
-        public string $directory,
+        public string $name,
         public SshInterface $ssh,
     ) {
     }
@@ -17,7 +17,7 @@ class DirectoryValueObject
     public function toArray()
     {
         return [
-            ...$this->directory ? ['directory' => $this->directory] : [],
+            ...$this->name ? ['name' => $this->name] : [],
         ];
     }
 }

@@ -3,30 +3,28 @@
 namespace App\Http\Controllers\Api\V1\Server;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Servers\CeeateDirectoryRequest;
+use App\Http\Requests\Servers\CeeateFileRequest;
 use Domain\Parspack\Actions\Servers\CreateDirectoryServer;
 use Domain\Parspack\Concerns\Interfaces\Server\SshInterface;
 use Domain\Parspack\Factories\Servers\DirectoryOrFileFactory;
 use Illuminate\Http\Response;
 use Infrastructure\Http\Responses\ApiResponse;
 
-class CreateDirectoryController extends Controller
+class CreateFileController extends Controller
 {
-    public function __invoke(CeeateDirectoryRequest $request, SshInterface $ssh)
+    public function __invoke(CeeateFileRequest $request, SshInterface $ssh)
     {
-        $directoryValueObject = DirectoryOrFileFactory::create($ssh, $request->validated());
-        $directoryCreatedBefor = CreateDirectoryServer::handle($directoryValueObject);
+        $fileValueObject = DirectoryOrFileFactory::create($ssh, $request->validated());
+        $fileCreatedBefor = CreateDirectoryServer::handle($fileValueObject);
 
-
-        if ($directoryCreatedBefor) {
+        if ($fileCreatedBefor) {
             return ApiResponse::handle(
-                message: 'the directory was created before',
+                message: 'the file was created before',
                 status: Response::HTTP_FORBIDDEN,
             );
         }
-
         return ApiResponse::handle(
-            message: 'the directory was created',
+            message: 'the file was created',
             status: Response::HTTP_ACCEPTED,
         );
     }
