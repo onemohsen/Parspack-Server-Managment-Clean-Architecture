@@ -16,8 +16,12 @@ class CreateFileServer
         CreateUserServer::handle($ssh, $username);
 
         $directoryAndFile = "/opt/myprogram/$username/$fileName";
-        $directoryCreatedBefor = $ssh->exec('touch -m 755 ' . $directoryAndFile . ' && chown -R ' . $username . ':' . $username . ' ' . $directoryAndFile);
+        $fileExists = $ssh->exec("(ls $directoryAndFile >> /dev/null 2>&1 && echo yes)");
+        if (!$fileExists) {
+            $ssh->exec('touch -d -m 644 ' . $directoryAndFile . ' && chown -R ' . $username . ':' . $username . ' ' . $directoryAndFile);
+            return true;
+        }
 
-        return $directoryCreatedBefor ? true : false;
+        return false;
     }
 }
