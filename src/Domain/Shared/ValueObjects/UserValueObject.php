@@ -8,7 +8,8 @@ class UserValueObject
 {
     public function __construct(
         public string $name,
-        public string $email,
+        public string $username,
+        public string|null $email,
         public string|null $password = null,
     ) {
     }
@@ -17,6 +18,7 @@ class UserValueObject
     {
         return [
             ...$this->name ? ['name' => $this->name] : [],
+            ...$this->username ? ['username' => $this->username] : [],
             ...$this->email ? ['email' => $this->email] : [],
             ...$this->password ? ['password' => $this->password] : [],
         ];
