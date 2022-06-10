@@ -16,7 +16,7 @@ class BackupUsersFile extends Command
      *
      * @var string
      */
-    protected $signature = 'parspack:backup-users-file {--username=}';
+    protected $signature = 'parspack:backup-users-file {--username=} {--ids=}';
 
     /**
      * The console command description.
@@ -33,10 +33,13 @@ class BackupUsersFile extends Command
     public function handle(SshInterface $sshInterface)
     {
         $username = $this->option('username');
+        $ids = $this->option('ids');
 
-        if (!$username) return $this->backupAllUsers();
+        if ($ids) return $this->backupUserWithIds($ids);
 
-        $this->backupUserWithUsername($sshInterface, $username);
+        if ($username) return $this->backupUserWithUsername($sshInterface, $username);
+
+        $this->backupAllUsers();
     }
 
     private function backupAllUsers()
@@ -65,6 +68,16 @@ class BackupUsersFile extends Command
             $this->info("backup user $user->username success");
         } else {
             $this->error("backup user $user->username failed");
+        }
+    }
+
+    private function backupUserWithIds(string $ids)
+    {
+        $ids = explode(',', $ids);
+
+        $users = User::whereIn('id', $ids)->get();
+        foreach ($users as $user) {
+            BackupUserFileJob::dispatch($user);
         }
     }
 }
