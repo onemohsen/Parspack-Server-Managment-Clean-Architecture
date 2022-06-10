@@ -9,11 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are use default guard spatie package.
@@ -29,6 +28,7 @@ class User extends Authenticatable
      */
     protected  $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'wallet_balance',
@@ -52,6 +52,12 @@ class User extends Authenticatable
     protected  $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function findForPassport($username)
+    {
+        return $this->where('username', $username)->first();
+    }
 
     /** @return SomeFancyFactory */
     protected static function newFactory()

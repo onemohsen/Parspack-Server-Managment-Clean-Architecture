@@ -10,15 +10,16 @@ class CreateFileServer
 {
     public static function handle(DirectoryOrFileValueObject $directoryValueObject): bool
     {
-        $username = 'onemohsen';
+        $username = auth()->user()->username;
         $ssh = $directoryValueObject->ssh;
         $fileName = $directoryValueObject->name;
         CreateUserServer::handle($ssh, $username);
 
-        $directoryAndFile = "/opt/myprogram/$username/$fileName";
-        $fileExists = $ssh->exec("(ls $directoryAndFile >> /dev/null 2>&1 && echo yes)");
+        $directory = "/opt/myprogram/$username";
+        $fileExists = $ssh->exec("(ls $directory/$fileName >> /dev/null 2>&1 && echo yes)");
         if (!$fileExists) {
-            $ssh->exec('touch -d -m 644 ' . $directoryAndFile . ' && chown -R ' . $username . ':' . $username . ' ' . $directoryAndFile);
+            $ssh->exec('mkdir -p -m 755 ' . $directory . ' && chown -R ' . $username . ':' . $username . ' ' . $directory);
+            $ssh->exec('touch -d -m 644 ' . $directory . "/" . $fileName . ' && chown -R ' . $username . ':' . $username . ' ' . $directory);
             return true;
         }
 

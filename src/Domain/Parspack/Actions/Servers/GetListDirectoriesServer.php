@@ -12,7 +12,7 @@ class GetListDirectoriesServer
 
     public static function handle(SshInterface $ssh, CommandParserFactory $commandParserFactory): array
     {
-        $username = "onemohsen";
+        $username = auth()->user()->username;
         $directory = "/opt/myprogram/$username";
         $command = "cd $directory && ls -d */";
         $results = $ssh->exec($command);
